@@ -48,7 +48,7 @@ public class Client_Controller extends Client implements ActionListener{
 			sql = "select * from userlist";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-
+			
 			socket = new Socket("127.0.0.1",7777); //IP ¿Í PORT
 			if(socket != null){
 				connect(); // ¼ÒÄÏOK
