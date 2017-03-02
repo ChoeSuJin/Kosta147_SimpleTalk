@@ -43,7 +43,7 @@ public class Server extends JFrame { // view
 
 	public static void main(String[] args) {
 		
-		Server server = new Server();
+		Server_Controller controller = new Server_Controller();
 		
 	}
 

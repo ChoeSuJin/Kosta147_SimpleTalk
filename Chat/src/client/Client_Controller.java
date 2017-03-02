@@ -56,7 +56,7 @@ public class Client_Controller extends Client implements ActionListener{
 			}
 			
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "네트워크 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
 	}// network
 	
@@ -67,8 +67,9 @@ public class Client_Controller extends Client implements ActionListener{
 			outputStream = socket.getOutputStream();
 			dataOutputStream = new DataOutputStream(outputStream);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Connect 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
+		System.out.println("연결완료!");
 		Log_frame.setVisible(false);
 		
 	}// connect
