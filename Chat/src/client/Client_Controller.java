@@ -92,7 +92,6 @@ public class Client_Controller extends Client implements ActionListener {
 				pstmt.setString(1, id);
 				rs = pstmt.executeQuery();
 
-				System.out.println(id + "  " + pw);
 
 				while (rs.next()) {
 					String temp = rs.getString(3);
