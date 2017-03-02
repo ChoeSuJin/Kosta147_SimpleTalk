@@ -82,7 +82,7 @@ public class Client extends JFrame{ //View
 		Log_btn.setBounds(117,140,80,30);
 		Log_btn.setFont(font1);
 		Log_panel.add(Log_btn);
-	
+		
 	}
 	
 	private void mainView() {
@@ -103,7 +103,6 @@ public class Client extends JFrame{ //View
 		
 		Main_user_list.setBounds(25,80,350,370);
 		Main_panel.add(Main_user_list);
-
 		
 	}
 
@@ -139,7 +138,7 @@ public class Client extends JFrame{ //View
 
 	public static void main(String[] args) {
 		
-		Client_Controller controller = new Client_Controller();
+		Client_Controller controller = new Client_Controller();	
 		
 	}
 	

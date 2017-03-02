@@ -55,7 +55,7 @@ public class Client_Controller extends Client implements ActionListener{
 			}
 			
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "네트워크 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
 	}// network
 	
@@ -66,8 +66,9 @@ public class Client_Controller extends Client implements ActionListener{
 			outputStream = socket.getOutputStream();
 			dataOutputStream = new DataOutputStream(outputStream);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Connect 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
+		System.out.println("연결완료!");
 		Log_frame.setVisible(false);
 		
 	}// connect
@@ -90,6 +91,7 @@ public class Client_Controller extends Client implements ActionListener{
 					String temp = rs.getString(3);
 					if(temp.equals(pw)){
 						System.out.println(rs.getString(4) + "님 로그인 완료");
+						network();
 					}else System.out.println("비밀번호 오류!");
 				}else System.out.println("존재하지 않는 아이디입니다.");
 			}
