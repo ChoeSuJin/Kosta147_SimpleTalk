@@ -49,6 +49,7 @@ public class Client_Controller extends Client implements ActionListener{
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
+			
 			socket = new Socket(rs.getString(1),rs.getInt(5)); //IP 와 PORT
 			if(socket != null){
 				connect(); // 소켓OK
@@ -90,8 +91,10 @@ public class Client_Controller extends Client implements ActionListener{
 					String temp = rs.getString(3);
 					if(temp.equals(pw)){
 						System.out.println(rs.getString(4) + "님 로그인 완료");
-					}else System.out.println("비밀번호 오류!");
-				}else System.out.println("존재하지 않는 아이디입니다.");
+						network();
+					} else System.out.println("비밀번호 오류!");
+				}
+				else System.out.println("존재하지 않는 아이디입니다.");
 			}
 		} catch (Exception e2) {
 			e2.printStackTrace();
