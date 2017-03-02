@@ -24,11 +24,11 @@ public class ConnectionHelper {
 		try {
 			if(dsn.equals("mysql")){
 				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sampledb","kingsmile","mysql");
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sampledb","king","mysql");
 			}
 			else if(dsn.equals("oracle")){
 				Class.forName("oracle.jdbc.OracleDriver");
-				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","kingsmile","oracle");
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","king","oracle");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
