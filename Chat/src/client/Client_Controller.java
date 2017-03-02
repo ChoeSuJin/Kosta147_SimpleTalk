@@ -49,7 +49,7 @@ public class Client_Controller extends Client implements ActionListener{
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
-			socket = new Socket(rs.getString(1),rs.getInt(5)); //IP 客 PORT
+			socket = new Socket("127.0.0.1",7777); //IP 客 PORT
 			if(socket != null){
 				connect(); // 家南OK
 			}
