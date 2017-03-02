@@ -2,12 +2,21 @@ package server;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
+
+import dbConn.util.ConnectionHelper;
 import server.Server;
 
 public class Server_Controller extends Server{ // 서버 컨트롤러
@@ -16,6 +25,8 @@ public class Server_Controller extends Server{ // 서버 컨트롤러
 	private ServerSocket serverSocket = null;
 	private Socket socket;
 	private int port = 7777;
+	
+
 	
 	public Server_Controller(){ // 생성자 함수
 		start();
@@ -41,6 +52,7 @@ public class Server_Controller extends Server{ // 서버 컨트롤러
 				try {
 					textArea.append("사용자 접속 대기중\n");
 					socket = serverSocket.accept();
+					
 				} catch (Exception e) {
 					textArea.append("서버가 중지 되었습니다\n");
 					break;
@@ -57,6 +69,22 @@ public class Server_Controller extends Server{ // 서버 컨트롤러
 		
 	}
 	
+	private class UserInfo extends Thread{
+		
+		private InputStream inputStream;
+		private OutputStream outputStream;
+		private DataOutputStream dataOutputStream;
+		private DataInputStream dataInputStream;
+		private Socket socket_user;
+		
+		public UserInfo(Socket socket){
+			
+			
+			
+		}
+
+		
+	}
 	
 	
 }// class end
