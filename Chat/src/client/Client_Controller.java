@@ -1,22 +1,21 @@
 package client;
 
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import javax.swing.JOptionPane;
 
-import dbConn.util.*;
+import dbConn.util.ConnectionHelper;
 
 public class Client_Controller extends Client implements ActionListener{
 	
@@ -35,6 +34,8 @@ public class Client_Controller extends Client implements ActionListener{
 	private String id = null;
 	private String pw = null;
 	
+	final int PORT_NUMBER = 7777;
+	
 	public Client_Controller(){ //생성자 함수
 		start();
 	}
@@ -48,9 +49,11 @@ public class Client_Controller extends Client implements ActionListener{
 			sql = "select * from userlist";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
+			InetAddress local = InetAddress.getLocalHost();
+	        String ip = local.getHostAddress();
 			
 			
-			socket = new Socket(rs.getString(1),rs.getInt(5)); //IP 와 PORT
+			socket = new Socket(ip, PORT_NUMBER); //IP 와 PORT
 			if(socket != null){
 				connect(); // 소켓OK
 			}
@@ -88,7 +91,7 @@ public class Client_Controller extends Client implements ActionListener{
 				id = Log_tf.getText();
 				pw = Pw_tf.getText();
 				
-				if(true==rs.next()){
+				if(rs.next()){
 					String temp = rs.getString(3);
 					if(temp.equals(pw)){
 						System.out.println(rs.getString(4) + "님 로그인 완료");
