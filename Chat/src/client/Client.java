@@ -30,6 +30,7 @@ public class Client extends JFrame{ //View
 	protected JLabel Log_lb = new JLabel("I D");
 	protected JLabel Pw_lb = new JLabel("P W");
 	protected JButton Log_btn = new JButton("로 그 인");
+	protected JButton SignUp_btn = new JButton("회원가입");
 	
 	//Main
 	
@@ -79,9 +80,13 @@ public class Client extends JFrame{ //View
 		Log_panel.add(Pw_tf);
 		
 		Font font1 = new Font("나눔고딕",Font.BOLD,12);
-		Log_btn.setBounds(117,140,80,30);
+		Log_btn.setBounds(177,140,80,30);
 		Log_btn.setFont(font1);
 		Log_panel.add(Log_btn);
+		
+		SignUp_btn.setBounds(57,140,80,30);
+		SignUp_btn.setFont(font1);
+		Log_panel.add(SignUp_btn);
 		
 	}
 	
