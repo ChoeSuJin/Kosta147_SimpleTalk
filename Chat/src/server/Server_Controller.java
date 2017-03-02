@@ -59,7 +59,6 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					
 					temp = socket.getInetAddress().toString();
 					
-					System.out.println("접속 ip = " + temp);
 					String currentIp = "";
 					for (int i = 1; i < temp.length(); i++) {
 						currentIp += String.valueOf(temp.charAt(i));
@@ -69,19 +68,13 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					pstmt.setString(1, currentIp);
 
 					rs = pstmt.executeQuery();
-					
-					System.out.println(currentIp);
 				
 					
 					if (rs.next()) {
-						System.out.println(rs.getString(1));
-						System.out.println(rs.getString(2));
-						System.out.println(rs.getString(3));
 						String nickName = rs.getString(4);
-						textArea.append(nickName + "님이 입장s하셨습니다.\n");
+						textArea.append(nickName + "님이 입장하셨습니다.\n");
 					}
 					
-					System.out.println("if 통과지점");
 
 				} catch (Exception e) {
 					textArea.append("서버가 중지 되었습니다\n");
