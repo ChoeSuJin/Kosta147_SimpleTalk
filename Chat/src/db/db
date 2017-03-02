@@ -1,0 +1,15 @@
+
+drop table UserList;
+
+create table UserList(
+	IP varchar2(20) constraint ip_pk Primary Key,
+	ID varchar2(20) constraint id_uk Unique,
+	PWD varchar2(30) not null,
+	Nickname varchar2(10) not null,
+	Port number(4) not null
+	);
+	
+select * from userlist;
+
+insert into userlist values('127.0.0.1','Seoyun','123456','¼­À±',7777);
+
