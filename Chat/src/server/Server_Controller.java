@@ -29,6 +29,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 	String sql = null;
 	ResultSet rs = null;
 	String temp = "";
+	Vector<String> userList = new Vector<String>();
 
 	public Server_Controller() { // 생성자 함수
 		start();
@@ -67,7 +68,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					for (int i = 1; i < temp.length(); i++) {
 						currentIp += String.valueOf(temp.charAt(i));
 					}
-
+					
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, currentIp);
 
@@ -77,6 +78,10 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					if (rs.next()) {
 						String nickName = rs.getString(4);
 						textArea.append(nickName + "님이 입장하셨습니다.\n");
+						
+						userList.add(currentIp);
+						sendToAll(userList);
+						
 					}
 					
 
@@ -84,6 +89,10 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					textArea.append("서버가 중지 되었습니다\n");
 					break;
 				} // try-catch
+				finally {
+					
+					sendToAll(userList);
+				}
 			} // while
 		}// run
 
