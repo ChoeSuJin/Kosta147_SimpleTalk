@@ -37,17 +37,17 @@ public class Client extends JFrame { // View
 
 	// Main
 
-	private JFrame Main_frame = new JFrame();
-	private JPanel Main_panel = new JPanel();
-	private JList Main_user_list = new JList();
+	protected JFrame Main_frame = new JFrame();
+	protected JPanel Main_panel = new JPanel();
+	protected JList Main_user_list = new JList();
 
 	// Chat
 
-	private JFrame Chat_frame = new JFrame();
-	private JPanel Chat_panel = new JPanel();
-	private JTextField chat_tf = new JTextField();
-	private JButton chat_send = new JButton("전 송");
-	private JTextArea chat_ta = new JTextArea();
+	protected JFrame Chat_frame = new JFrame();
+	protected JPanel Chat_panel = new JPanel();
+	protected JTextField chat_tf = new JTextField();
+	protected JButton chat_send = new JButton("전 송");
+	protected JTextArea chat_ta = new JTextArea();
 
 	public Client() { // 생성자 함수
 
@@ -142,7 +142,7 @@ public class Client extends JFrame { // View
 
 		Main_frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		Main_frame.setVisible(true);
+		Main_frame.setVisible(false);
 		Main_frame.setBounds(500,170,400,500);
 		Main_frame.setResizable(false);
 

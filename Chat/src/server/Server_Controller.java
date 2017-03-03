@@ -30,7 +30,8 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 	ResultSet rs = null;
 	String temp = "";
 	Vector<String> userList = new Vector<String>();
-
+	String nickName = "";
+	
 	public Server_Controller() { // 생성자 함수
 		start();
 	}
@@ -76,7 +77,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 				
 					
 					if (rs.next()) {
-						String nickName = rs.getString(4);
+						nickName = rs.getString(4);
 						textArea.append(nickName + "님이 입장하셨습니다.\n");
 						
 						userList.add(currentIp);
@@ -91,6 +92,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 				} // try-catch
 				finally {
 					
+					textArea.append(nickName + "님이 퇴장하셨습니다.\n");
 					sendToAll(userList);
 				}
 			} // while

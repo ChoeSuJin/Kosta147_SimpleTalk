@@ -103,6 +103,7 @@ public class Client_Controller extends Client implements ActionListener {
 					if (temp.equals(pw)) {
 						System.out.println(rs.getString(4) + "님 로그인 완료");
 						network();
+						super.Main_frame.setVisible(true);
 						break;
 					} else {
 						System.out.println("비밀번호가 틀렸습니다.");
