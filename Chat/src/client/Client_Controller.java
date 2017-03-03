@@ -144,12 +144,13 @@ public class Client_Controller extends Client implements ActionListener {
 			@Override
 			public void run() {
 				try {
-					sql = "insert into " + db_table + " values(?,?,?,?)";
+					sql = "insert into " + db_table + " values(?,?,?,?,?)";
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, ip);
 					pstmt.setString(2, id);
 					pstmt.setString(3, pwd);
 					pstmt.setString(4, nicname);
+					pstmt.setInt(5, 7777);
 					if(pstmt.executeUpdate() == 1){
 						JOptionPane.showMessageDialog(null, "저장 완료", "알림", JOptionPane.INFORMATION_MESSAGE);
 						signUp_frame.setVisible(false);
