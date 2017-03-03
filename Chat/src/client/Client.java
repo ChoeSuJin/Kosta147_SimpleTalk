@@ -2,6 +2,7 @@ package client;
 
 import java.awt.Font;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,10 +40,14 @@ public class Client extends JFrame { // View
 
 	protected JFrame Main_frame = new JFrame();
 	protected JPanel Main_panel = new JPanel();
-	protected JList Main_user_list = new JList();
+	protected static DefaultListModel listModel = new DefaultListModel<String>();
+	protected static JList Main_user_list = new JList(listModel);
+	
+	
 
 	// Chat
 
+	
 	protected JFrame Chat_frame = new JFrame();
 	protected JPanel Chat_panel = new JPanel();
 	protected JTextField chat_tf = new JTextField();
@@ -154,7 +159,8 @@ public class Client extends JFrame { // View
 		Font font = new Font("³ª´®°íµñ", Font.BOLD, 14);
 		Main_panel.add(list_lb);
 		list_lb.setFont(font);
-
+		
+		
 		Main_user_list.setBounds(25, 80, 350, 370);
 		Main_panel.add(Main_user_list);
 

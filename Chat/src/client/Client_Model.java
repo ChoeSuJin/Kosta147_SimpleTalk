@@ -1,10 +1,13 @@
 package client;
 
 import java.net.InetAddress;
+import java.util.Vector;
 
 public class Client_Model {
 
 	private String client_ip;
+	
+	
 
 	// set, get method
 	public String getClient_ip() {

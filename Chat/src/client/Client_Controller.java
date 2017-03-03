@@ -12,7 +12,9 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Vector;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import dbConn.util.ConnectionHelper;
@@ -33,7 +35,11 @@ public class Client_Controller extends Client implements ActionListener {
 	ResultSet rs = null;
 	private String id = null;
 	private String pw = null;
+	static Vector<String> userList = new Vector<String>();
 	
+	String ip = "";
+	Socket s;
+
 	// dto
 	Client_Model dto = new Client_Model();
 
@@ -56,11 +62,14 @@ public class Client_Controller extends Client implements ActionListener {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			InetAddress local = InetAddress.getLocalHost();
-			String ip = local.getHostAddress();
+			ip = local.getHostAddress();
 
 			socket = new Socket(ip, PORT_NUMBER); // IP 와 PORT
+			
 			if (socket != null) {
 				connect(); // 소켓OK
+				
+				
 			}
 
 		} catch (Exception e) {
@@ -74,10 +83,15 @@ public class Client_Controller extends Client implements ActionListener {
 			dataInputStream = new DataInputStream(inputStream);
 			outputStream = socket.getOutputStream();
 			dataOutputStream = new DataOutputStream(outputStream);
+			
+			
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Connect 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
 		System.out.println("연결완료!");
+		
+		
+		
 		Log_frame.setVisible(false);
 
 	}// connect
@@ -86,6 +100,10 @@ public class Client_Controller extends Client implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource(); // Object의 객체 obj를 생성
 		try {
+			Socket socket = new Socket(ip, PORT_NUMBER);
+			
+			DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+			DataInputStream dis = new DataInputStream(socket.getInputStream());
 
 			if (obj == Log_btn) { // 버튼이 눌릴때
 
@@ -96,14 +114,20 @@ public class Client_Controller extends Client implements ActionListener {
 
 				pstmt.setString(1, id);
 				rs = pstmt.executeQuery();
+				
+				String tempIp = "";
 
 				while (rs.next()) {
+					tempIp = rs.getString(1);
 					String temp = rs.getString(3);
 					System.out.println(temp);
 					if (temp.equals(pw)) {
 						System.out.println(rs.getString(4) + "님 로그인 완료");
 						network();
+						dos.writeUTF(ip);
+						
 						super.Main_frame.setVisible(true);
+						Thread thread = new ClientRecievier_userList(socket);
 						break;
 					} else {
 						System.out.println("비밀번호가 틀렸습니다.");
@@ -112,6 +136,8 @@ public class Client_Controller extends Client implements ActionListener {
 
 					// 테스트할때는 꼭 commit하고 합시당...
 				}
+				
+				
 			} else if (obj == SignUp_btn) {
 				// 회원가입 GUI 띄우기
 				super.signUpView();
@@ -141,7 +167,7 @@ public class Client_Controller extends Client implements ActionListener {
 	private void create_userDB(String ip, String id, String pwd, String nicname) {
 		String db_table = "ip_mapping_table"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
 		// 회원 가입시 쓰레드 생성
-		Thread thread = new Thread(){
+		Thread thread = new Thread() {
 			@Override
 			public void run() {
 				try {
@@ -152,7 +178,7 @@ public class Client_Controller extends Client implements ActionListener {
 					pstmt.setString(3, pwd);
 					pstmt.setString(4, nicname);
 					pstmt.setInt(5, 7777);
-					if(pstmt.executeUpdate() == 1){
+					if (pstmt.executeUpdate() == 1) {
 						JOptionPane.showMessageDialog(null, "저장 완료", "알림", JOptionPane.INFORMATION_MESSAGE);
 						signUp_frame.setVisible(false);
 					} else {
@@ -168,16 +194,62 @@ public class Client_Controller extends Client implements ActionListener {
 		thread.start();
 	} // create DB user
 	
-	public void view_userList() {
+	public class ClientRecievier_userList extends Thread {
+		Socket s;
+		DataInputStream dis;
 		
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				super.run();
-			}
-			
-		}; // thread end
-		
-	} // view_userList() end
+		public ClientRecievier_userList(Socket s) { //매개변수 1개 생성자함수
+			this.s = s;
+			try {
+				dis = new DataInputStream(s.getInputStream());
+				
+			} catch (Exception e) {		e.printStackTrace();	}
+		}
+
+		public void run() {
+			while ( dis != null ) {
+				try {
+					String temp = dis.readUTF();
+					System.out.println(temp);
+					int index = -1;
+					for (int i = 0; i < listModel.getSize(); i++) {
+						System.out.println(listModel.get(i));
+						if (temp.equals(listModel.get(i))) {
+							index = i;
+							break;
+						}
+					}
+					
+					if (index != -1) {
+						listModel.removeElementAt(index);
+					}
+					else
+						listModel.addElement(temp);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}// while end
+		}
+	} // ClientRecievier end
+
+	/*
+	 * public void view_userList() {
+	 * 
+	 * Thread thread = new Thread() {
+	 * 
+	 * @Override public void run() { Socket s; DataInputStream dis = null;
+	 * 
+	 * try { dis = new DataInputStream(s.getInputStream()); } catch (Exception
+	 * e) { // TODO: handle exception } while ( dis != null ) { try {
+	 * System.out.println(dis.readUTF()); } catch (Exception e) { } }// while
+	 * end
+	 * 
+	 * }
+	 * 
+	 * }; // thread end
+	 * 
+	 * } // view_userList() end
+	 * 
+	 */
 }
