@@ -89,11 +89,11 @@ public class Client extends JFrame { // View
 		Log_panel.add(Pw_tf);
 
 		Font font1 = new Font("³ª´®°íµñ", Font.BOLD, 12);
-		Log_btn.setBounds(177, 140, 80, 30);
+		Log_btn.setBounds(70, 140, 90, 30);
 		Log_btn.setFont(font1);
 		Log_panel.add(Log_btn);
 
-		SignUp_btn.setBounds(57, 140, 80, 30);
+		SignUp_btn.setBounds(190, 140, 90, 30);
 		SignUp_btn.setFont(font1);
 		Log_panel.add(SignUp_btn);
 
@@ -183,7 +183,7 @@ public class Client extends JFrame { // View
 		Main_frame.setContentPane(Main_panel);
 
 		JLabel list_lb = new JLabel("»ç ¿ë ÀÚ ¸ñ ·Ï");
-		list_lb.setBounds(150, 25, 90, 30);
+		list_lb.setBounds(150, 25, 100, 30);
 		Font font = new Font("³ª´®°íµñ", Font.BOLD, 14);
 		Main_panel.add(list_lb);
 		list_lb.setFont(font);
@@ -195,7 +195,7 @@ public class Client extends JFrame { // View
 
 	private void chatView() {
 
-		Chat_frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//		Chat_frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Chat_frame.setVisible(false);
 		Chat_frame.setBounds(500, 170, 400, 500);
 		Chat_frame.setResizable(false);

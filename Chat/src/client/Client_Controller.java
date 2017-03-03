@@ -96,14 +96,17 @@ public class Client_Controller extends Client implements ActionListener {
 
 				pstmt.setString(1, id);
 				rs = pstmt.executeQuery();
-
+				
+				if(rs.next() == false){
+					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "알림", JOptionPane.ERROR_MESSAGE);
+				} // ID, PW 틀렸을경우 경고창 띄우기
+				
 				while (rs.next()) {
 					String temp = rs.getString(3);
 					System.out.println(temp);
 					if (temp.equals(pw)) {
-						Log_frame.setVisible(false);
-						super.mainView();
-
+						Log_frame.setVisible(false); // 로그인 창 닫기
+						super.mainView(); // 메인 유저목록창 띄우기
 						System.out.println(rs.getString(4) + "님 로그인 완료");
 						network();
 						break;
@@ -128,8 +131,8 @@ public class Client_Controller extends Client implements ActionListener {
 					String ip = dto.getClient_ip(); // client_ip 가져옴
 					String id = signUp_id.getText();
 					String pwd = signUp_pwd.getText();
-					String nicname = signUp_nicname.getText();
-					create_userDB(ip, id, pwd, nicname);
+					String nickname = signUp_nicname.getText();
+					create_userDB(ip, id, pwd, nickname);
 				}
 			} else if (obj == signUp_btn_exit) {
 				// 회원 가입 GUI 닫기
@@ -140,7 +143,7 @@ public class Client_Controller extends Client implements ActionListener {
 		}
 	}// actionPerformed
 
-	private void create_userDB(String ip, String id, String pwd, String nicname) {
+	private void create_userDB(String ip, String id, String pwd, String nickname) {
 		String db_table = "userlist"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
 		// 회원 가입시 쓰레드 생성
 		Thread thread = new Thread(){
@@ -152,7 +155,7 @@ public class Client_Controller extends Client implements ActionListener {
 					pstmt.setString(1, ip);
 					pstmt.setString(2, id);
 					pstmt.setString(3, pwd);
-					pstmt.setString(4, nicname);
+					pstmt.setString(4, nickname);
 					pstmt.setInt(5, 7777);
 					if(pstmt.executeUpdate() == 1){
 						JOptionPane.showMessageDialog(null, "저장 완료", "알림", JOptionPane.INFORMATION_MESSAGE);
