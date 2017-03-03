@@ -28,7 +28,7 @@ public class ConnectionHelper {
 			}
 			else if(dsn.equals("oracle")){
 				Class.forName("oracle.jdbc.OracleDriver");
-				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","king","oracle");
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","chatserver","oracle");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
