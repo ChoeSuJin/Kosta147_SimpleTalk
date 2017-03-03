@@ -93,7 +93,7 @@ public class Client extends JFrame{ //View
 	private void mainView() {
 		
 		Main_frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Main_frame.setVisible(false);
+		Main_frame.setVisible(true);
 		Main_frame.setBounds(500,170,400,500);
 		Main_frame.setResizable(false);
 		
