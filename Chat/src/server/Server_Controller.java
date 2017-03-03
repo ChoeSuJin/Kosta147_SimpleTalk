@@ -91,8 +91,6 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					break;
 				} // try-catch
 				finally {
-					
-					textArea.append(nickName + "님이 퇴장하셨습니다.\n");
 					sendToAll(userList);
 				}
 			} // while
@@ -104,8 +102,10 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 		
 		String[] list = new String[userList.size()];
 		
+		
 		for (int i = 0; i < list.length; i++) {
 			list[i] = userList.get(i);
+			System.out.println(list[i]);
 		}
 
 		for (int i = 0; i < list.length; i++){
@@ -137,20 +137,18 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 			String name = "";
 			try {
 				name = dis.readUTF();
-				sendToAll("#" + name + " 님이 입장하셨습니다.");
-
-				clients.put(name, dos);
-				System.out.println("현재 서버 접속자 수는 : " + clients.size() + " 입니다");
+				sendToAll(userList);
 
 				while (dis != null) {
-					sendToAll(dis.readUTF());
+					sendToAll(userList);
 				}
 			} catch (Exception e) {
 			} finally {
-				sendToAll("#" + name + " 님이 나가셨습니다.");
-				clients.remove(name);
-				System.out.println("[" + s.getInetAddress() + " : " + s.getPort() + "] 에서 접속 종료하였습니다.");
-				System.out.println("현재 서버 접속자 수는 : " + clients.size() + " 입니다");
+				//sendToAll("#" + name + " 님이 나가셨습니다.");
+				
+				//System.out.println("[" + s.getInetAddress() + " : " + s.getPort() + "] 에서 접속 종료하였습니다.");
+				textArea.append("님이 퇴장하셨습니다.");
+				System.out.println("현재 서버 접속자 수는 : " + userList.size() + " 입니다");
 			}
 		} // run() end
 	} // ServerReceiver class end

@@ -167,4 +167,17 @@ public class Client_Controller extends Client implements ActionListener {
 		// 쓰레드 실행
 		thread.start();
 	} // create DB user
+	
+	public void view_userList() {
+		
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				super.run();
+			}
+			
+		}; // thread end
+		
+	} // view_userList() end
 }
