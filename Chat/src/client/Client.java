@@ -1,8 +1,11 @@
 package client;
 
+import java.awt.Choice;
 import java.awt.Font;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -32,17 +35,21 @@ public class Client extends JFrame { // View
 	protected JLabel signUp_label_id = new JLabel("I D");
 	protected JLabel signUp_label_pwd = new JLabel("P W");
 	protected JLabel signUp_label_nicname = new JLabel("Nicname");
+	protected JLabel signUp_label_sex = new JLabel("Sex");
+	protected JLabel signUp_label_job = new JLabel("Job");
 	protected JButton signUp_btn_reg = new JButton("µî ·Ï");
 	protected JButton signUp_btn_exit = new JButton("´Ý ±â");
+	protected JPanel signup_check_panel = new JPanel();
+	protected JCheckBox check_woman = new JCheckBox("Woman");
+	protected JCheckBox check_man = new JCheckBox("Man");
+	protected Choice choice = new Choice();
 
 	// Main
-
 	private JFrame Main_frame = new JFrame();
 	private JPanel Main_panel = new JPanel();
 	private JList Main_user_list = new JList();
 
 	// Chat
-
 	private JFrame Chat_frame = new JFrame();
 	private JPanel Chat_panel = new JPanel();
 	private JTextField chat_tf = new JTextField();
@@ -52,7 +59,6 @@ public class Client extends JFrame { // View
 	public Client() { // »ý¼ºÀÚ ÇÔ¼ö
 
 		login();
-		mainView();
 		chatView();
 
 	}
@@ -96,52 +102,80 @@ public class Client extends JFrame { // View
 	protected void signUpView() {
 		// frame GUI
 		signUp_frame.setVisible(true);
-		signUp_frame.setBounds(700, 170, 318, 250);
+		signUp_frame.setBounds(700, 170, 318, 300);
 		signUp_frame.setResizable(false);
-		
+
 		// panel
 		signUp_frame.setContentPane(signUp_panel);
 		signUp_panel.setLayout(null);
-		
+
 		// text
 		Font font = new Font("³ª´®°íµñ", Font.BOLD, 14);
 		signUp_id.setBounds(110, 30, 170, 30);
 		signUp_id.setFont(font);
 		signUp_panel.add(signUp_id);
-		
+
 		signUp_pwd.setBounds(110, 70, 170, 30);
 		signUp_pwd.setFont(font);
 		signUp_panel.add(signUp_pwd);
-	
+
 		signUp_nicname.setBounds(110, 110, 170, 30);
 		signUp_nicname.setFont(font);
 		signUp_panel.add(signUp_nicname);
-		
+
 		// Label
 		signUp_label_id.setFont(font);
 		signUp_label_id.setBounds(30, 30, 80, 30);
 		signUp_panel.add(signUp_label_id);
-		
+
 		signUp_label_pwd.setFont(font);
 		signUp_label_pwd.setBounds(30, 70, 80, 30);
 		signUp_panel.add(signUp_label_pwd);
-		
+
 		signUp_label_nicname.setFont(font);
 		signUp_label_nicname.setBounds(30, 110, 80, 30);
 		signUp_panel.add(signUp_label_nicname);
 		
-		// button
-		signUp_btn_reg.setBounds(110, 150, 80, 30);
-		signUp_panel.add(signUp_btn_reg);
+		signUp_label_sex.setFont(font);
+		signUp_label_sex.setBounds(30, 150, 80, 30);
+		signUp_panel.add(signUp_label_sex);
 		
-		signUp_btn_exit.setBounds(200, 150, 80, 30);
+		signUp_label_job.setFont(font);
+		signUp_label_job.setBounds(30, 190, 80, 30);
+		signUp_panel.add(signUp_label_job);
+
+		// chekButton
+		Font font_check = new Font("³ª´®°íµñ", Font.BOLD, 12);
+		signup_check_panel.setBounds(110, 150, 170, 30);
+		signup_check_panel.setLayout(new BoxLayout(signup_check_panel, BoxLayout.X_AXIS));
+		check_man.setFont(font_check);
+		signup_check_panel.add(check_man);
+		check_woman.setFont(font_check);
+		signup_check_panel.add(check_woman);
+		signUp_panel.add(signup_check_panel);
+		
+		// Choice
+		choice.setBounds(110, 190, 170, 30);
+		choice.add("ÇÐ»ý");
+		choice.add("È¸»ç¿ø");
+		choice.add("ÁÖºÎ");
+		choice.add("À×¿©");
+		choice.add("±âÅ¸");
+		signUp_panel.add(choice);
+
+		// button
+		signUp_btn_reg.setBounds(110, 230, 80, 30);
+		signUp_panel.add(signUp_btn_reg);
+
+		signUp_btn_exit.setBounds(200, 230, 80, 30);
 		signUp_panel.add(signUp_btn_exit);
+
 	}
-	
-	private void mainView() {
+
+	protected void mainView() {
 
 		Main_frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Main_frame.setVisible(false);
+		Main_frame.setVisible(true);
 		Main_frame.setBounds(500, 170, 400, 500);
 		Main_frame.setResizable(false);
 

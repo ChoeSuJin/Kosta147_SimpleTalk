@@ -2,6 +2,7 @@ package server;
 
 public class Server_Model { // ¼­¹ö ¸ğµ¨
 	
-	// first commit ±èÅÂÈ«
+	// first commit ¹ÚÇı½Å//asdf1234
+	//commitÈñ¸Á
 	
 }

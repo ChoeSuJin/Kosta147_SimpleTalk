@@ -101,6 +101,9 @@ public class Client_Controller extends Client implements ActionListener {
 					String temp = rs.getString(3);
 					System.out.println(temp);
 					if (temp.equals(pw)) {
+						Log_frame.setVisible(false);
+						super.mainView();
+
 						System.out.println(rs.getString(4) + "님 로그인 완료");
 						network();
 						break;
@@ -138,7 +141,7 @@ public class Client_Controller extends Client implements ActionListener {
 	}// actionPerformed
 
 	private void create_userDB(String ip, String id, String pwd, String nicname) {
-		String db_table = "ip_mapping_table"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
+		String db_table = "userlist"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
 		// 회원 가입시 쓰레드 생성
 		Thread thread = new Thread(){
 			@Override
