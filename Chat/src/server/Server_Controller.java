@@ -2,12 +2,15 @@ package server;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -15,6 +18,7 @@ import javax.swing.JOptionPane;
 import dbConn.util.ConnectionHelper;
 import server.Server;
 
+import server.Server_Model;
 public class Server_Controller extends Server { // 서버 컨트롤러
 
 	// Net Source
@@ -25,6 +29,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 	String sql = null;
 	ResultSet rs = null;
 	String temp = "";
+	Vector<String> userList = new Vector<String>();
 
 	public Server_Controller() { // 생성자 함수
 		start();
@@ -63,7 +68,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					for (int i = 1; i < temp.length(); i++) {
 						currentIp += String.valueOf(temp.charAt(i));
 					}
-
+					
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, currentIp);
 
@@ -73,6 +78,10 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					if (rs.next()) {
 						String nickName = rs.getString(4);
 						textArea.append(nickName + "님이 입장하셨습니다.\n");
+						
+						userList.add(currentIp);
+						sendToAll(userList);
+						
 					}
 					
 
@@ -80,10 +89,69 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					textArea.append("서버가 중지 되었습니다\n");
 					break;
 				} // try-catch
+				finally {
+					
+					sendToAll(userList);
+				}
 			} // while
 		}// run
 
 	} // 스레드
+	
+	public void sendToAll(Vector<String> userList) {
+		
+		String[] list = new String[userList.size()];
+		
+		for (int i = 0; i < list.length; i++) {
+			list[i] = userList.get(i);
+		}
+
+		for (int i = 0; i < list.length; i++){
+			try {
+				//DataOutputStream dos = (DataOutputStream) clients.get(it.next());
+				DataOutputStream dos = null;
+				dos.writeUTF(list[i]);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} // end while
+	} // sendToAll(String msg) end
+
+	class ServerReceiver extends Thread { // inner class
+		Socket s;
+		DataInputStream dis;
+		DataOutputStream dos;
+
+		public ServerReceiver(Socket s) {
+			this.s = s;
+			try {
+				dis = new DataInputStream(s.getInputStream());
+				dos = new DataOutputStream(s.getOutputStream());
+			} catch (Exception e) {
+			}
+		} // constructor end
+
+		public void run() {
+			String name = "";
+			try {
+				name = dis.readUTF();
+				sendToAll("#" + name + " 님이 입장하셨습니다.");
+
+				clients.put(name, dos);
+				System.out.println("현재 서버 접속자 수는 : " + clients.size() + " 입니다");
+
+				while (dis != null) {
+					sendToAll(dis.readUTF());
+				}
+			} catch (Exception e) {
+			} finally {
+				sendToAll("#" + name + " 님이 나가셨습니다.");
+				clients.remove(name);
+				System.out.println("[" + s.getInetAddress() + " : " + s.getPort() + "] 에서 접속 종료하였습니다.");
+				System.out.println("현재 서버 접속자 수는 : " + clients.size() + " 입니다");
+			}
+		} // run() end
+	} // ServerReceiver class end
 
 	private void connect() {
 

@@ -1,7 +1,9 @@
 package server;
 
+import java.util.Vector;
+
 public class Server_Model { // ¼­¹ö ¸ðµ¨
 	
-	// first commit ¹ÚÇý½Å//
-	// first commit °­¼­À±//
+	Vector<String> userList = new Vector<String>();
+
 }
