@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -127,7 +128,8 @@ public class Client_Controller extends Client implements ActionListener {
 						dos.writeUTF(ip);
 						
 						super.Main_frame.setVisible(true);
-						Thread thread = new ClientRecievier_userList(socket);
+						
+						receive_userList(socket);
 						break;
 					} else {
 						System.out.println("비밀번호가 틀렸습니다.");
@@ -194,62 +196,40 @@ public class Client_Controller extends Client implements ActionListener {
 		thread.start();
 	} // create DB user
 	
-	public class ClientRecievier_userList extends Thread {
-		Socket s;
+	public void receive_userList(Socket s) throws IOException {
 		DataInputStream dis;
 		
-		public ClientRecievier_userList(Socket s) { //매개변수 1개 생성자함수
-			this.s = s;
-			try {
-				dis = new DataInputStream(s.getInputStream());
-				
-			} catch (Exception e) {		e.printStackTrace();	}
-		}
-
-		public void run() {
-			while ( dis != null ) {
-				try {
-					String temp = dis.readUTF();
-					System.out.println(temp);
-					int index = -1;
-					for (int i = 0; i < listModel.getSize(); i++) {
-						System.out.println(listModel.get(i));
-						if (temp.equals(listModel.get(i))) {
-							index = i;
-							break;
+		dis = new DataInputStream(s.getInputStream());
+		
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				while ( dis != null ) {
+					try {
+						System.out.println("receive_userList 진입");
+						String temp = dis.readUTF();
+						System.out.println(temp);
+						int index = -1;
+						for (int i = 0; i < listModel.getSize(); i++) {
+							System.out.println(listModel.get(i));
+							if (temp.equals(listModel.get(i))) {
+								index = i;
+								break;
+							}
 						}
+						
+						if (index != -1) {
+							listModel.removeElementAt(index);
+						}
+						else
+							listModel.addElement(temp);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					
-					if (index != -1) {
-						listModel.removeElementAt(index);
-					}
-					else
-						listModel.addElement(temp);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}// while end
-		}
+				}// while end
+			}
+		};
 	} // ClientRecievier end
 
-	/*
-	 * public void view_userList() {
-	 * 
-	 * Thread thread = new Thread() {
-	 * 
-	 * @Override public void run() { Socket s; DataInputStream dis = null;
-	 * 
-	 * try { dis = new DataInputStream(s.getInputStream()); } catch (Exception
-	 * e) { // TODO: handle exception } while ( dis != null ) { try {
-	 * System.out.println(dis.readUTF()); } catch (Exception e) { } }// while
-	 * end
-	 * 
-	 * }
-	 * 
-	 * }; // thread end
-	 * 
-	 * } // view_userList() end
-	 * 
-	 */
 }

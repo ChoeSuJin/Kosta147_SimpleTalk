@@ -1,6 +1,7 @@
 package server;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,12 +15,13 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
-import javax.xml.crypto.Data;
 
 import dbConn.util.ConnectionHelper;
 import server.Server;
 
 import server.Server_Model;
+import client.Client_Model;
+
 public class Server_Controller extends Server { // 서버 컨트롤러
 
 	// Net Source
@@ -33,6 +35,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 	Vector<Object> userList = new Vector<>();
 	String nickName = "";
 	String id = "";
+	String ip = "";
 	
 	public Server_Controller() { // 생성자 함수
 		start();
@@ -84,9 +87,10 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 						textArea.append(nickName + "님이 입장하셨습니다.\n");
 						
 						userList.add(nickName + "(" + id + ")");
-						
-						//Thread thread = new ServerReceiver(socket);
-						sendToAll(userList, socket);
+						ServerSender(socket, userList);
+						/*
+						Thread thread = new ServerSender(socket, userList);
+						thread.start();*/
 						
 					}
 					
@@ -95,6 +99,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					break;
 				} // try-catch
 				finally {
+					
 				}
 			} // while
 		}// run
@@ -124,37 +129,43 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 		
 	} // sendToAll(String msg) end
 
-	class ServerReceiver extends Thread { // inner class
-		Socket s;
+	public void ServerReceiver(Socket s) throws IOException { // inner class
 		DataInputStream dis;
-		DataOutputStream dos;
-
-		public ServerReceiver(Socket s) {
-			this.s = s;
-			try {
-				System.out.println("ServerReceiver 진입");
-				dis = new DataInputStream(s.getInputStream());
-				dos = new DataOutputStream(s.getOutputStream());
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} // constructor end
-
-		public void run() {
-			String name = "";
-			try {
-				
-				while (dis != null) {
-					sendToAll(userList, s);
+		
+		System.out.println("ServerReceiver 진입");
+		dis = new DataInputStream(s.getInputStream());
+		
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					
+					while (dis != null) {
+						sendToAll(userList, s);
+					}
+				} catch (Exception e) {
+				} finally {
+					textArea.append("님이 퇴장하셨습니다.\n");
+					textArea.append("현재 서버 접속자 수는 : " + userList.size() + " 입니다.\n");
 				}
-			} catch (Exception e) {
-			} finally {
-				textArea.append("님이 퇴장하셨습니다.\n");
-				textArea.append("현재 서버 접속자 수는 : " + userList.size() + " 입니다.\n");
-			}
-		} // run() end
+			} // run() end
+		};
+
+
+		
 	} // ServerReceiver class end
+	
+	public void ServerSender(Socket s, Vector<Object> userList) throws IOException {
+
+		
+		System.out.println("ServerSender 진입");
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				sendToAll(userList, s);
+			}
+		};
+		
+	}
 
 	private void connect() {
 
