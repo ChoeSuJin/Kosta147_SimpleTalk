@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 public class Client extends JFrame { // View
 
@@ -166,7 +167,7 @@ public class Client extends JFrame { // View
 
 	}
 
-	private void chatView() {
+	protected void chatView() {
 
 		Chat_frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Chat_frame.setVisible(false);
@@ -192,6 +193,7 @@ public class Client extends JFrame { // View
 		chat_send.setBounds(315, 420, 60, 30);
 		chat_send.setFont(font);
 		Chat_panel.add(chat_send);
+		
 
 	}
 

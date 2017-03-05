@@ -2,12 +2,14 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,13 +37,13 @@ public class Client_Controller extends Client implements ActionListener {
 	ResultSet rs = null;
 	private String id = null;
 	private String pw = null;
-	static Vector<String> userList = new Vector<String>();
+	static Vector<Client_Model> userList = new Vector<Client_Model>();
 	
 	String ip = "";
 	Socket s;
 
 	// dto
-	Client_Model dto = new Client_Model();
+	Client_Model client = new Client_Model();
 
 	final int PORT_NUMBER = 7777;
 
@@ -54,6 +56,8 @@ public class Client_Controller extends Client implements ActionListener {
 		SignUp_btn.addActionListener(this);
 		signUp_btn_reg.addActionListener(this); // 회원가입 GUI : 등록
 		signUp_btn_exit.addActionListener(this); // 회원가입 GUI : 닫기
+		
+		
 	}
 
 	private void network() {
@@ -77,7 +81,7 @@ public class Client_Controller extends Client implements ActionListener {
 		}
 	}// network
 
-	private void connect() {
+	private void connect() throws IOException {
 		try {
 			inputStream = socket.getInputStream();
 			dataInputStream = new DataInputStream(inputStream);
@@ -89,13 +93,23 @@ public class Client_Controller extends Client implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Connect 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
 		System.out.println("연결완료!");
+		receive_userList(socket);
 		
 		
 		
 		Log_frame.setVisible(false);
 
 	}// connect
-
+	
+	public void mouseClicked(MouseEvent e) {
+		if (e.getClickCount() == 2) {
+			int index = Main_user_list.locationToIndex(e.getPoint());
+			super.chatView();
+			super.Chat_frame.setVisible(true);
+			super.Chat_frame.setTitle((String)Main_user_list.getSelectedValue());
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource(); // Object의 객체 obj를 생성
@@ -116,6 +130,7 @@ public class Client_Controller extends Client implements ActionListener {
 				rs = pstmt.executeQuery();
 				
 				String tempIp = "";
+				
 
 				while (rs.next()) {
 					tempIp = rs.getString(1);
@@ -127,7 +142,8 @@ public class Client_Controller extends Client implements ActionListener {
 						dos.writeUTF(ip);
 						
 						super.Main_frame.setVisible(true);
-						Thread thread = new ClientRecievier_userList(socket);
+						
+						//receive_userList(socket);
 						break;
 					} else {
 						System.out.println("비밀번호가 틀렸습니다.");
@@ -135,7 +151,7 @@ public class Client_Controller extends Client implements ActionListener {
 					}
 
 					// 테스트할때는 꼭 commit하고 합시당...
-				}
+				}	// while end
 				
 				
 			} else if (obj == SignUp_btn) {
@@ -149,7 +165,7 @@ public class Client_Controller extends Client implements ActionListener {
 					JOptionPane.showMessageDialog(null, "PW 입력은 필수입니다.", "알림", JOptionPane.ERROR_MESSAGE);
 				} else {
 					// 회원 정보 DB에 저장
-					String ip = dto.getClient_ip(); // client_ip 가져옴
+					String ip = client.getClient_ip(); // client_ip 가져옴
 					String id = signUp_id.getText();
 					String pwd = signUp_pwd.getText();
 					String nicname = signUp_nicname.getText();
@@ -158,6 +174,11 @@ public class Client_Controller extends Client implements ActionListener {
 			} else if (obj == signUp_btn_exit) {
 				// 회원 가입 GUI 닫기
 				super.signUp_frame.setVisible(false);
+			} else if (obj == Main_user_list) {
+				super.Chat_frame.setVisible(true);
+				super.chat_ta.setEditable(true);
+				super.chatView();
+				
 			}
 		} catch (Exception e2) {
 			e2.printStackTrace();
@@ -165,7 +186,7 @@ public class Client_Controller extends Client implements ActionListener {
 	}// actionPerformed
 
 	private void create_userDB(String ip, String id, String pwd, String nicname) {
-		String db_table = "ip_mapping_table"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
+		String db_table = "userlist"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
 		// 회원 가입시 쓰레드 생성
 		Thread thread = new Thread() {
 			@Override
@@ -194,62 +215,51 @@ public class Client_Controller extends Client implements ActionListener {
 		thread.start();
 	} // create DB user
 	
-	public class ClientRecievier_userList extends Thread {
-		Socket s;
+	public void receive_userList(Socket s) throws IOException {
 		DataInputStream dis;
+		Client_Model client = new Client_Model();
 		
-		public ClientRecievier_userList(Socket s) { //매개변수 1개 생성자함수
-			this.s = s;
-			try {
-				dis = new DataInputStream(s.getInputStream());
-				
-			} catch (Exception e) {		e.printStackTrace();	}
-		}
-
-		public void run() {
-			while ( dis != null ) {
-				try {
-					String temp = dis.readUTF();
-					System.out.println(temp);
-					int index = -1;
-					for (int i = 0; i < listModel.getSize(); i++) {
-						System.out.println(listModel.get(i));
-						if (temp.equals(listModel.get(i))) {
-							index = i;
-							break;
+		dis = new DataInputStream(s.getInputStream());
+		
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				while ( dis != null ) {
+					try {
+						System.out.println("receive_userList 진입");
+						String ip = dis.readUTF();
+						String id = dis.readUTF();
+						String nick = dis.readUTF();
+						client.setClient_id(id);
+						client.setClient_ip(ip);
+						client.setClient_nick(nick);
+						userList.add(client);
+						String temp = nick + "(" + id + ")";
+						
+						int index = -1;
+						for (int i = 0; i < listModel.getSize(); i++) {
+							System.out.println(listModel.get(i));
+							if (ip.equals(userList.get(i).getClient_ip())) {
+								index = i;
+								break;
+							}
 						}
+						
+						if (index != -1) {
+							listModel.removeElementAt(index);
+							userList.remove(index);
+						}
+						else
+							listModel.addElement(temp);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					
-					if (index != -1) {
-						listModel.removeElementAt(index);
-					}
-					else
-						listModel.addElement(temp);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}// while end
-		}
+				}// while end
+			}
+		};
+		
+		thread.start();
 	} // ClientRecievier end
 
-	/*
-	 * public void view_userList() {
-	 * 
-	 * Thread thread = new Thread() {
-	 * 
-	 * @Override public void run() { Socket s; DataInputStream dis = null;
-	 * 
-	 * try { dis = new DataInputStream(s.getInputStream()); } catch (Exception
-	 * e) { // TODO: handle exception } while ( dis != null ) { try {
-	 * System.out.println(dis.readUTF()); } catch (Exception e) { } }// while
-	 * end
-	 * 
-	 * }
-	 * 
-	 * }; // thread end
-	 * 
-	 * } // view_userList() end
-	 * 
-	 */
 }
