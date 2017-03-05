@@ -37,13 +37,13 @@ public class Client_Controller extends Client implements ActionListener {
 	ResultSet rs = null;
 	private String id = null;
 	private String pw = null;
-	static Vector<String> userList = new Vector<String>();
+	static Vector<Client_Model> userList = new Vector<Client_Model>();
 	
 	String ip = "";
 	Socket s;
 
 	// dto
-	Client_Model dto = new Client_Model();
+	Client_Model client = new Client_Model();
 
 	final int PORT_NUMBER = 7777;
 
@@ -130,6 +130,7 @@ public class Client_Controller extends Client implements ActionListener {
 				rs = pstmt.executeQuery();
 				
 				String tempIp = "";
+				
 
 				while (rs.next()) {
 					tempIp = rs.getString(1);
@@ -164,7 +165,7 @@ public class Client_Controller extends Client implements ActionListener {
 					JOptionPane.showMessageDialog(null, "PW 입력은 필수입니다.", "알림", JOptionPane.ERROR_MESSAGE);
 				} else {
 					// 회원 정보 DB에 저장
-					String ip = dto.getClient_ip(); // client_ip 가져옴
+					String ip = client.getClient_ip(); // client_ip 가져옴
 					String id = signUp_id.getText();
 					String pwd = signUp_pwd.getText();
 					String nicname = signUp_nicname.getText();
@@ -185,7 +186,7 @@ public class Client_Controller extends Client implements ActionListener {
 	}// actionPerformed
 
 	private void create_userDB(String ip, String id, String pwd, String nicname) {
-		String db_table = "ip_mapping_table"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
+		String db_table = "userlist"; // 자기 서버에 있는 테이블 이름으로 바꾸서 사용.
 		// 회원 가입시 쓰레드 생성
 		Thread thread = new Thread() {
 			@Override
@@ -216,6 +217,7 @@ public class Client_Controller extends Client implements ActionListener {
 	
 	public void receive_userList(Socket s) throws IOException {
 		DataInputStream dis;
+		Client_Model client = new Client_Model();
 		
 		dis = new DataInputStream(s.getInputStream());
 		
@@ -225,12 +227,19 @@ public class Client_Controller extends Client implements ActionListener {
 				while ( dis != null ) {
 					try {
 						System.out.println("receive_userList 진입");
-						String temp = dis.readUTF();
-						System.out.println(temp);
+						String ip = dis.readUTF();
+						String id = dis.readUTF();
+						String nick = dis.readUTF();
+						client.setClient_id(id);
+						client.setClient_ip(ip);
+						client.setClient_nick(nick);
+						userList.add(client);
+						String temp = nick + "(" + id + ")";
+						
 						int index = -1;
 						for (int i = 0; i < listModel.getSize(); i++) {
 							System.out.println(listModel.get(i));
-							if (temp.equals(listModel.get(i))) {
+							if (ip.equals(userList.get(i).getClient_ip())) {
 								index = i;
 								break;
 							}
@@ -238,6 +247,7 @@ public class Client_Controller extends Client implements ActionListener {
 						
 						if (index != -1) {
 							listModel.removeElementAt(index);
+							userList.remove(index);
 						}
 						else
 							listModel.addElement(temp);

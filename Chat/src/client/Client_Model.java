@@ -8,7 +8,6 @@ public class Client_Model {
 	private String client_ip;
 	private String client_id;
 	private String client_nick;
-	private String client_port;
 	
 
 	// set, get method
@@ -21,6 +20,10 @@ public class Client_Model {
 			System.out.println("Error : Load Client_IP");
 		}
 		return ip;
+	}
+	
+	public void setClient_ip(String client_ip) {
+		this.client_ip = client_ip;
 	}
 
 
@@ -43,16 +46,6 @@ public class Client_Model {
 		this.client_nick = client_nick;
 	}
 
-
-	public String getClient_port() {
-		return client_port;
-	}
-
-
-	public void setClient_port(String client_port) {
-		this.client_port = client_port;
-	}
-	
 	
 	
 	
