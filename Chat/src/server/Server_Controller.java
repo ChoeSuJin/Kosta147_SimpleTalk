@@ -87,10 +87,8 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 						textArea.append(nickName + "님이 입장하셨습니다.\n");
 						
 						userList.add(nickName + "(" + id + ")");
-						ServerSender(socket, userList);
-						/*
-						Thread thread = new ServerSender(socket, userList);
-						thread.start();*/
+						send_userList(socket, userList);
+
 						
 					}
 					
@@ -98,9 +96,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 					textArea.append("서버가 중지 되었습니다\n");
 					break;
 				} // try-catch
-				finally {
-					
-				}
+				
 			} // while
 		}// run
 
@@ -121,7 +117,6 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 				dos.writeUTF(list[i]);
 			} // end while
 			dos.flush();
-			dos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,7 +133,6 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 		Thread thread = new Thread() {
 			public void run() {
 				try {
-					
 					while (dis != null) {
 						sendToAll(userList, s);
 					}
@@ -149,12 +143,14 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 				}
 			} // run() end
 		};
+		
+		thread.start();
 
 
 		
 	} // ServerReceiver class end
 	
-	public void ServerSender(Socket s, Vector<Object> userList) throws IOException {
+	public void send_userList(Socket s, Vector<Object> userList) throws IOException {
 
 		
 		System.out.println("ServerSender 진입");
@@ -164,6 +160,7 @@ public class Server_Controller extends Server { // 서버 컨트롤러
 				sendToAll(userList, s);
 			}
 		};
+		thread.start();
 		
 	}
 

@@ -2,6 +2,7 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -55,6 +56,8 @@ public class Client_Controller extends Client implements ActionListener {
 		SignUp_btn.addActionListener(this);
 		signUp_btn_reg.addActionListener(this); // 회원가입 GUI : 등록
 		signUp_btn_exit.addActionListener(this); // 회원가입 GUI : 닫기
+		
+		
 	}
 
 	private void network() {
@@ -78,7 +81,7 @@ public class Client_Controller extends Client implements ActionListener {
 		}
 	}// network
 
-	private void connect() {
+	private void connect() throws IOException {
 		try {
 			inputStream = socket.getInputStream();
 			dataInputStream = new DataInputStream(inputStream);
@@ -90,13 +93,23 @@ public class Client_Controller extends Client implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Connect 연결 실패", "알림", JOptionPane.ERROR_MESSAGE);
 		}
 		System.out.println("연결완료!");
+		receive_userList(socket);
 		
 		
 		
 		Log_frame.setVisible(false);
 
 	}// connect
-
+	
+	public void mouseClicked(MouseEvent e) {
+		if (e.getClickCount() == 2) {
+			int index = Main_user_list.locationToIndex(e.getPoint());
+			super.chatView();
+			super.Chat_frame.setVisible(true);
+			super.Chat_frame.setTitle((String)Main_user_list.getSelectedValue());
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource(); // Object의 객체 obj를 생성
@@ -129,7 +142,7 @@ public class Client_Controller extends Client implements ActionListener {
 						
 						super.Main_frame.setVisible(true);
 						
-						receive_userList(socket);
+						//receive_userList(socket);
 						break;
 					} else {
 						System.out.println("비밀번호가 틀렸습니다.");
@@ -137,7 +150,7 @@ public class Client_Controller extends Client implements ActionListener {
 					}
 
 					// 테스트할때는 꼭 commit하고 합시당...
-				}
+				}	// while end
 				
 				
 			} else if (obj == SignUp_btn) {
@@ -160,6 +173,11 @@ public class Client_Controller extends Client implements ActionListener {
 			} else if (obj == signUp_btn_exit) {
 				// 회원 가입 GUI 닫기
 				super.signUp_frame.setVisible(false);
+			} else if (obj == Main_user_list) {
+				super.Chat_frame.setVisible(true);
+				super.chat_ta.setEditable(true);
+				super.chatView();
+				
 			}
 		} catch (Exception e2) {
 			e2.printStackTrace();
@@ -230,6 +248,8 @@ public class Client_Controller extends Client implements ActionListener {
 				}// while end
 			}
 		};
+		
+		thread.start();
 	} // ClientRecievier end
 
 }
