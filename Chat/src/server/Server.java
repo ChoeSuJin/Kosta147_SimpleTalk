@@ -4,12 +4,12 @@ import java.awt.Font;
 
 import javax.swing.*;
 
-public class Server extends JFrame { // view
+public class Server extends JFrame { // vi//ew
 	
 	private JFrame Frame = new JFrame();
 	private JPanel panel = new JPanel();
 	protected JTextArea textArea = new JTextArea();
-	
+	//í…ŒìŠ¤íŠ¸
 	public Server(){
 		mainView();
 	}
@@ -24,15 +24,15 @@ public class Server extends JFrame { // view
 		Frame.setContentPane(panel);
 		panel.setLayout(null);
 		
-		JLabel title = new JLabel("¼­ ¹ö V I E W");
-		Font font = new Font("³ª´®°íµñ",Font.BOLD,14);
+		JLabel title = new JLabel("ï¿½ï¿½ ï¿½ï¿½ V I E W");
+		Font font = new Font("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",Font.BOLD,14);
 		title.setFont(font);
 		title.setBounds(150,25,100,30);
 		panel.add(title);
 		
 		JScrollPane scrollPanel = new JScrollPane();
 		scrollPanel.setBounds(25,80,350,370);
-		Font font1 = new Font("³ª´®°íµñ",Font.PLAIN,12);
+		Font font1 = new Font("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",Font.PLAIN,12);
 		scrollPanel.setFont(font1);
 		panel.add(scrollPanel);
 		
